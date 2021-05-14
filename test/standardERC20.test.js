@@ -9,7 +9,7 @@ contract("StandardERC20", ([deployer, receiver, exchange]) => {
   const name = "testToken";
   const symbol = "TST";
   const decimals = "18";
-  const totalSupply = "1000000000000000000000000000";
+  const totalSupply = "0";
   let standardERC20;
 
   beforeEach(async () => {
@@ -46,17 +46,20 @@ contract("StandardERC20", ([deployer, receiver, exchange]) => {
   describe("sending tokens", () => {
     let result;
     let amount;
-
+    let minting;
     describe("success", async () => {
       beforeEach(async () => {
         amount = "100";
+        minting = await standardERC20.mint(deployer, amount,  {
+          from: deployer,
+        })
         result = await standardERC20.transfer(receiver, amount);
       });
 
       it("transfers token balances", async () => {
         let balanceOf;
         balanceOf = await standardERC20.balanceOf(deployer);
-        balanceOf.toString().should.equal("999999999999999999999999900");
+        balanceOf.toString().should.equal("99999999999999999900");
         balanceOf = await standardERC20.balanceOf(receiver);
         balanceOf.toString().should.equal("100");
       });
@@ -140,6 +143,10 @@ contract("StandardERC20", ([deployer, receiver, exchange]) => {
 
     describe("success", async () => {
       beforeEach(async () => {
+        amount1 = "100";
+        minting = await standardERC20.mint(deployer, amount1,  {
+          from: deployer,
+        })
         result = await standardERC20.transferFrom(deployer, receiver, amount, {
           from: exchange,
         });
@@ -148,7 +155,7 @@ contract("StandardERC20", ([deployer, receiver, exchange]) => {
       it("transfers token balances", async () => {
         let balanceOf;
         balanceOf = await standardERC20.balanceOf(deployer);
-        balanceOf.toString().should.equal("999999999999999999999999900".toString());
+        balanceOf.toString().should.equal("99999999999999999900".toString());
         balanceOf = await standardERC20.balanceOf(receiver);
         balanceOf.toString().should.equal("100".toString());
       });
